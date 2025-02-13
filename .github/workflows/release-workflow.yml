@@ -1,0 +1,99 @@
+name: Release build
+on:
+    push:
+        tags:
+            - "*.*.*"
+env:
+  DIST: el9
+  ARCH: x86_64
+  RPMNAME: os-discovery-tool
+
+jobs:
+    build_tarball:
+        name: Build source archive
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Replace version in RPM spec so correct source is downloaded when building RPM
+              run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ github.event.repository.name }}.spec
+
+            - name: Create source archive
+              run: tar -cvf ${{ env.RPMNAME }}-${{ github.ref_name }}.tar.gz *
+
+            - name: Upload source archive as artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: ${{ env.RPMNAME }}-${{ github.ref_name }}.tar.gz
+                path: ${{ env.RPMNAME }}-${{ github.ref_name }}.tar.gz
+
+    build_rpm:
+        name: Build .rpm package
+        needs: build_tarball
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Replace version in RPM spec so correct source is downloaded when building RPM
+              run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ github.event.repository.name }}.spec
+
+            - name: Run rpmbuild on RPM spec to produce package
+              id: rpm
+              uses: naveenrajm7/rpmbuild@master
+              with:
+                spec_file: ${{ github.event.repository.name }}.spec
+
+            - name: Upload .rpm package as artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: ${{ env.RPMNAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.rpm
+                path: rpmbuild/RPMS/${{ env.ARCH }}/*.rpm
+
+    build_deb:
+        name: Build .deb package
+        needs: build_rpm
+        runs-on: ubuntu-latest
+        steps:
+            - name: Download .rpm artifact
+              uses: actions/download-artifact@v4
+              id: download
+              with:
+                name: ${{ env.RPMNAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.rpm
+          
+            - name: find .
+              run: find .
+          
+            - name: Convert .rpm to .deb
+              run: |
+                sudo apt install -y alien
+                sudo alien -k --verbose --scripts --to-deb *.rpm
+          
+            - name: find .
+              run: find . -exec readlink -f {} \;
+          
+            - name: Upload .deb package as artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: ${{ env.RPMNAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.deb
+                path: ${{ env.RPMNAME }}*.deb
+
+    release:
+        name: Create release with all assets
+        needs: [build_tarball, build_rpm, build_deb]
+        runs-on: ubuntu-latest
+        steps:
+            - name: Download .rpm artifact
+              uses: actions/download-artifact@v4
+
+            - name: find .
+              run: find .
+
+            - name: Release
+              uses: softprops/action-gh-release@v1
+              with:
+                files: |
+                    ${{ env.RPMNAME }}-${{ github.ref_name }}.tar.gz/*.tar.gz
+                    ${{ env.RPMNAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.rpm/**/*.rpm
+                    ${{ env.RPMNAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.deb/**/*.deb
