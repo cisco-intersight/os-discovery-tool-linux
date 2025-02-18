@@ -56,6 +56,7 @@ CRON_OUT_FILE=`crontab -l > $TEMP_FILE_NAME`
 echo "Add required cron detalis in cron temp file"
 ADD_TO_CRON=`echo "#Schedule the os inventory to imc:" >> $TEMP_FILE_NAME`
 ADD_TO_CRON=`echo "0 */24 * * * /opt/os-discovery-tool/gather_inventory_from_host.sh & > /dev/null 2>&1 " >> $TEMP_FILE_NAME`
+ADD_TO_CRON=`echo "@reboot /opt/os-discovery-tool/gather_inventory_from_host.sh & > /dev/null 2>&1 " >> $TEMP_FILE_NAME`
 echo "Storing temp cron to the crontab"
 ADD_TEMP_TO_CRON=`crontab $TEMP_FILE_NAME`
 echo "Remove %{tempFile} temp file"
@@ -66,7 +67,7 @@ RUN_CMD=`/opt/os-discovery-tool/gather_inventory_from_host.sh & > /dev/null 2>&1
 %postun
 TEMP_FILE_NAME=%{tempFile}
 CRON_OUT_FILE=`crontab -l > $TEMP_FILE_NAME`
-ADD_TO_CRON=`sed -i '/#Schedule the os inventory to imc:/,+2d' $TEMP_FILE_NAME`
+ADD_TO_CRON=`sed -i '/#Schedule the os inventory to imc:/,+3d' $TEMP_FILE_NAME`
 ADD_TO_CRON=`crontab $TEMP_FILE_NAME`
 rm -r -f $TEMP_FILE_NAME
 
