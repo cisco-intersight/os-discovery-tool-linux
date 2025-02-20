@@ -194,11 +194,8 @@ write-gpuinfo()
 {
 	echo "Getting GPU Info"
 
-	gpudriverinfo=$($installationPath/gpudriver.sh)
-	IFS=',' read -ra ADDR <<< "$gpudriverinfo"
-	drivers="${ADDR[0]}"
-	versions="${ADDR[1]}"
-	#versions=$()
+	drivers=$($installationPath/gpudriver.sh)
+	versions=$($installationPath/gpuversions.sh)
 	description=$($installationPath/gpudev.sh)
 
 	counter=$totaldrivercount
@@ -246,8 +243,7 @@ if ! $(command -v modinfo &> /dev/null) || ! $(command -v lspci &> /dev/null) ||
         write-networkinfo
         write-fcinfo
         write-storageinfo
-        #write-gpuinfo
-    exit
+        write-gpuinfo
 fi
 write-endkeyinfo
 

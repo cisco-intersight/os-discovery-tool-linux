@@ -37,29 +37,29 @@ for pciaddress in $(${lshwcmd} -C Display 2>/dev/null | grep "pci@" | awk -F":" 
                   # Redhat OS supports both graphics and compute drivers
                   if [[ (${osvendorlist[*]} =~ ${osvendor}) ]] && [[ ($classcode == "3D controller")]];
                       then
-                      echo "${driver}(compute)"
+                      echo "${nvidiagpuversion}"
                   # If the mode is not set correctly on M6/M60 GPUs
                   elif [[ (${osvendorlist[*]} =~ ${osvendor}) ]] && [[ ($classcode =~ "VGA")]];
                       then
-                      echo "${driver}(compute)"
+                      echo ""
                   fi
 
                   # evaluating graphics drivers of on Redhat OS
                   if [[ ($osvendor == "rhel") || ($osvendor == "red hat") ]] && [[ ($classcode =~ "VGA") ]];
                       then
-                      echo "${driver}(graphics)"
+                      echo "${nvidiagpuversion}"
                   elif [[ ($osvendor == "rhel") || ($osvendor == "red hat") ]] && [[ ($classcode == "3D controller")]];
                       then
-                      echo "${driver}(graphics)"
+                      echo ""
                   fi
 
               else
                 if [[ (${osvendorlist[*]} =~ ${osvendor}) ]] && [[ ($nvidiavgpu == "Not supported devices in vGPU mode")]];
                     then
-                    echo "${driver}(compute)"
+                    echo "${nvidiagpuversion}"
                 elif [[ ($osvendor == "rhel") || ($osvendor == "red hat") ]] && [[ !($nvidiavgpu == "Not supported devices in vGPU mode") ]];
                     then
-                    echo "${driver}(graphics)"
+                    echo "${nvidiagpuversion}"
                  fi
               fi
           fi
@@ -73,7 +73,7 @@ for pciaddress in $(${lshwcmd} -C Display 2>/dev/null | grep "pci@" | awk -F":" 
         if ! ([[ $amdsmicmd =~ $invalid || -z "$amdsmicmd" ]]); then
             amdgpudriver=$(${lspcicmd} -v -s ${pciaddress} | grep "Kernel driver" | awk -F":" '{print $2}' | xargs);
             amdgpuversion=$(${lspcicmd} -v -s ${pciaddress} | grep "Kernel driver" | awk -F":" '{print $2}' | xargs ${modinfocmd} 2>/dev/null | grep -i "version" | head -n1 | awk '{print $2}' | xargs)
-	    echo "${amdgpudriver}"
+	    echo "${amdgpuversion}"
         fi
     fi
 done

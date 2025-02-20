@@ -28,6 +28,7 @@ install fcversions.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/fcversions.sh
 install gather_inventory_from_host.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/gather_inventory_from_host.sh
 install gpudev.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/gpudev.sh
 install gpudriver.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/gpudriver.sh
+install gpuversions.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/gpuversions.sh
 install netdev.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/netdev.sh
 install netdriver.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/netdriver.sh
 install netversions.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/netversions.sh
@@ -83,6 +84,7 @@ rm -r -f $TEMP_FILE_NAME
 /opt/os-discovery-tool/gather_inventory_from_host.sh
 /opt/os-discovery-tool/gpudev.sh
 /opt/os-discovery-tool/gpudriver.sh
+/opt/os-discovery-tool/gpuversions.sh
 /opt/os-discovery-tool/netdev.sh
 /opt/os-discovery-tool/netdriver.sh
 /opt/os-discovery-tool/netversions.sh
@@ -99,7 +101,3 @@ rm -r -f $TEMP_FILE_NAME
 /opt/os-discovery-tool/oracle-os-version.sh
 /opt/os-discovery-tool/suse-os-version.sh
 /opt/os-discovery-tool/host-inv.yaml
-
-%changelog
-* Wed Jan 29 2025 pnithyan <pnithyan@cisco.com>
-- Initial release
