@@ -1,4 +1,5 @@
 #!/bin/bash
+# Copyright (c) 2025 Cisco Systems, Inc. All rights reserved.
 
 installationPath="/opt/os-discovery-tool"
 inventoryfilename=$installationPath/"host-inv.yaml"
