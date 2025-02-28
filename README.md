@@ -10,6 +10,15 @@ _send_inventory_to_imc.sh_  - Reads the host-inv.yaml created by gather_inventor
 
 ![Example Image](Readme-example.png)
 
+_ipmitool_ - This project uses the "IPMI Tool" which is a utility for managing and configuring devices that support
+the Intelligent Platform Management Interface.  IPMI is an open standard
+for monitoring, logging, recovery, inventory, and control of hardware
+that is implemented independent of the main CPU, BIOS, and OS.
+
+IPMI Tool Source: [https://github.com/ipmitool/ipmitool](https://github.com/ipmitool/ipmitool)
+
+IPMI Tool License: [https://github.com/ipmitool/ipmitool?tab=License-1-ov-file#readme](https://github.com/ipmitool/ipmitool?tab=License-1-ov-file#readme)
+
 ## Table of Contents
 
 - [Installation](#installation)
