@@ -48,19 +48,14 @@ install host-inv.yaml $RPM_BUILD_ROOT/opt/os-discovery-tool/host-inv.yaml
 
 %post
 chmod 755 -R /opt/os-discovery-tool
-echo "Starting Cron Setup........."
 %define tempFile `mktemp`
 #store temp file name
 TEMP_FILE_NAME=%{tempFile}
-echo "Storing crontab current data in temp file %{tempFile}"
 CRON_OUT_FILE=`crontab -l > $TEMP_FILE_NAME`
-echo "Add required cron detalis in cron temp file"
 ADD_TO_CRON=`echo "#Schedule the os inventory to imc:" >> $TEMP_FILE_NAME`
 ADD_TO_CRON=`echo "0 */24 * * * /opt/os-discovery-tool/gather_inventory_from_host.sh & > /dev/null 2>&1 " >> $TEMP_FILE_NAME`
 ADD_TO_CRON=`echo "@reboot /opt/os-discovery-tool/gather_inventory_from_host.sh & > /dev/null 2>&1 " >> $TEMP_FILE_NAME`
-echo "Storing temp cron to the crontab"
 ADD_TEMP_TO_CRON=`crontab $TEMP_FILE_NAME`
-echo "Remove %{tempFile} temp file"
 rm -r -f $TEMP_FILE_NAME
 #To execute immediately after installation
 RUN_CMD=`/opt/os-discovery-tool/gather_inventory_from_host.sh & > /dev/null 2>&1`
