@@ -46,6 +46,8 @@ install oracle-os-version.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/oracle-os-ver
 install suse-os-version.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/suse-os-version.sh
 install host-inv.yaml $RPM_BUILD_ROOT/opt/os-discovery-tool/host-inv.yaml
 install LICENSE $RPM_BUILD_ROOT/opt/os-discovery-tool/LICENSE
+install README.md $RPM_BUILD_ROOT/opt/os-discovery-tool/README.md
+install coreos-name.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/coreos-name.sh
 
 %post
 chmod 755 -R /opt/os-discovery-tool
@@ -98,3 +100,5 @@ rm -r -f $TEMP_FILE_NAME
 /opt/os-discovery-tool/suse-os-version.sh
 /opt/os-discovery-tool/host-inv.yaml
 /opt/os-discovery-tool/LICENSE
+/opt/os-discovery-tool/README.md
+/opt/os-discovery-tool/coreos-name.sh

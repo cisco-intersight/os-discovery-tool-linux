@@ -31,6 +31,11 @@ write-osinfo()
 	  os_name=$($installationPath/redhat-os-name.sh)
 	  os_flavor=$($installationPath/redhat-os-name.sh)
 	  os_vendor='Red Hat'
+	elif [[ $os_vendor == 'rhcos' ]]
+	then
+	  os_name=$($installationPath/coreos-name.sh)
+	  os_flavor=$($installationPath/coreos-name.sh)
+	  os_vendor='Red Hat'
 	elif [[ $os_vendor == 'rocky' ]]
 	then
 	  os_name=$($installationPath/rocky-os-name.sh)
@@ -196,6 +201,9 @@ write-gpuinfo()
 	echo "Getting GPU Info"
 
 	drivers=$($installationPath/gpudriver.sh)
+	if [[ -z $drivers ]]; then
+	  return
+	fi
 	versions=$($installationPath/gpuversions.sh)
 	description=$($installationPath/gpudev.sh)
 
