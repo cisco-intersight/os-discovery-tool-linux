@@ -39,6 +39,9 @@ Command to install Software Requirements on SuSE Linux: `zypper install lshw`
 
 Note: Operating System details will be collected even without Host Software Requirements.
 
+**Supported GPU:** Nvidia, AMD
+
+make sure **nvidia-smi, amd-smi** commands are installed and available for GPU support.
 
 ## Usage
 
