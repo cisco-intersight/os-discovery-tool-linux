@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # Copyright (c) 2025 Cisco Systems, Inc. All rights reserved.
 
 export PATH=$PATH:/sbin:/usr/sbin
