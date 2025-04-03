@@ -7,7 +7,7 @@ lspcicmd=`which lspci`
 modinfocmd=`which modinfo`
 osvendor=$(cat /etc/*-release 2>/dev/null | grep -i ^ID= | head -n1 | awk -F"=" '{print $2}'| xargs)
 nvidiasmicmd=`which nvidia-smi 2>&1`
-amdsmicmd=`which amd-smi 2>&1`
+amdcmdpath="/opt/rocm/.info/version"
 invalid=" |'"
 
 # List of OS vendors who support nvidia drivers
@@ -72,10 +72,8 @@ for pciaddress in $(${lshwcmd} -C Display 2>/dev/null | grep "pci@" | awk -F":" 
             continue
          fi
     elif [[ ${displaydevice,,} =~ 'amd' ]]; then
-        if ! ([[ $amdsmicmd =~ $invalid || -z "$amdsmicmd" ]]); then
-            amdgpudriver=$(${lspcicmd} -v -s ${pciaddress} | grep "Kernel driver" | awk -F":" '{print $2}' | xargs);
-            amdgpuversion=$(${lspcicmd} -v -s ${pciaddress} | grep "Kernel driver" | awk -F":" '{print $2}' | xargs ${modinfocmd} 2>/dev/null | grep -i "version" | head -n1 | awk '{print $2}' | xargs)
-	    echo "${amdgpudriver}"
+        if [ -e $amdcmdpath ]; then
+	    echo "rocm"
         fi
     fi
 done
