@@ -56,10 +56,11 @@ for pciaddress in $(${lshwcmd} -C Display 2>/dev/null | grep "pci@" | awk -F":" 
                   fi
 
               else
-                if [[ (${osvendorlist[*]} =~ ${osvendor}) ]] && [[ ($nvidiavgpu == "Not supported devices in vGPU mode")]];
+                pattern="^No[t]? supported devices in vGPU mode$"
+                if [[ (${osvendorlist[*]} =~ ${osvendor}) ]] && echo "$nvidiavgpu" | grep -Eq "$pattern";
                     then
                     echo "${nvidiagpuversion}"
-                elif [[ ($osvendor == "rhel") || ($osvendor == "red hat") ]] && [[ !($nvidiavgpu == "Not supported devices in vGPU mode") ]];
+                elif [[ ($osvendor == "rhel") || ($osvendor == "red hat") ]] && ! (echo "$nvidiavgpu" | grep -Eq "$pattern");
                     then
                     echo "${nvidiagpuversion}"
                  fi
