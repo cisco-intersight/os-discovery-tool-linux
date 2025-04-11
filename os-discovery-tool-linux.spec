@@ -5,7 +5,7 @@ Vendor:         Cisco Systems, Inc.
 Summary:        The Cisco Intersight os-discovery-tool is used to collect operating system and driver information for Hardware Compliance Validation.
 License:        Apache-2.0
 Source0:        %{name}-%{version}.tar.gz
-Requires:       bash
+Requires:       bash, ipmitool
 
 %description
 The Cisco Intersight os-discovery-tool is used to collect operating system and driver information for Hardware Compliance Validation.
@@ -39,7 +39,6 @@ install send_inventory_to_imc.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/send_inve
 install storagedev.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/storagedev.sh
 install storagedriver.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/storagedriver.sh
 install storageversions.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/storageversions.sh
-install ipmitool $RPM_BUILD_ROOT/opt/os-discovery-tool/ipmitool
 install rocky-os-name.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/rocky-os-name.sh
 install oracle-os-name.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/oracle-os-name.sh
 install oracle-os-version.sh $RPM_BUILD_ROOT/opt/os-discovery-tool/oracle-os-version.sh
@@ -93,7 +92,6 @@ rm -r -f $TEMP_FILE_NAME
 /opt/os-discovery-tool/storagedev.sh
 /opt/os-discovery-tool/storagedriver.sh
 /opt/os-discovery-tool/storageversions.sh
-/opt/os-discovery-tool/ipmitool
 /opt/os-discovery-tool/rocky-os-name.sh
 /opt/os-discovery-tool/oracle-os-name.sh
 /opt/os-discovery-tool/oracle-os-version.sh
