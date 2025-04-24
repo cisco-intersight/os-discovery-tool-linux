@@ -1,4 +1,5 @@
 #!/bin/bash
 # Copyright (c) 2025 Cisco Systems, Inc. All rights reserved.
 
-echo $(cat /etc/redhat-release 2>/dev/null | awk '{print $1" "$2" "$3" "$4" "$5" "$7}')
+version=`cat /etc/*-release | grep 'VERSION_ID\=' | head -n1 | awk -F'=' '{print $2}'| awk -F'"' '{print $2}'`
+echo "Red Hat Enterprise Linux CoreOS "$version
