@@ -19,7 +19,7 @@ WORKDIR /opt/os-discovery-tool
 
 # Create cron job configuration
 RUN echo "#Schedule the os inventory to imc:" >> /opt/os-discovery-tool/odtcron
-RUN echo "*/5 * * * * /opt/os-discovery-tool/gather_inventory_from_host.sh & > /var/log/mycron.log 2>&1" >> /opt/os-discovery-tool/odtcron
+RUN echo "0 */24 * * * /opt/os-discovery-tool/gather_inventory_from_host.sh & > /var/log/mycron.log 2>&1" >> /opt/os-discovery-tool/odtcron
 RUN echo "@reboot /opt/os-discovery-tool/gather_inventory_from_host.sh & > /var/log/mycron.log 2>&1" >> /opt/os-discovery-tool/odtcron
 RUN crontab /opt/os-discovery-tool/odtcron
 
