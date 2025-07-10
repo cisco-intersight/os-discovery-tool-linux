@@ -17,6 +17,9 @@ jobs:
             - name: Replace version in RPM spec so correct source is downloaded when building RPM
               run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.run_number}}/' ${{ github.event.repository.name }}.spec
 
+            - name: Replace version in source files
+              run: sed -Ei 's/ucsToolVersion=""/ucsToolVersion="${{github.run_number}}"/' gather_inventory_from_host.sh
+
             - name: Create source archive
               run: tar -cvf ${{ env.RPMNAME }}-${{ github.run_number }}.tar.gz *
 
@@ -36,6 +39,9 @@ jobs:
 
             - name: Replace version in RPM spec so correct source is downloaded when building RPM
               run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.run_number}}/' ${{ github.event.repository.name }}.spec
+
+            - name: Replace version in source files
+              run: sed -Ei 's/ucsToolVersion=""/ucsToolVersion="${{github.run_number}}"/' gather_inventory_from_host.sh
 
             - name: Run rpmbuild on RPM spec to produce package
               id: rpm
