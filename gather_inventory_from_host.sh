@@ -3,6 +3,7 @@
 
 export PATH=$PATH:/sbin:/usr/sbin
 installationPath="/opt/os-discovery-tool"
+ucsToolVersion=""
 
 cleanup_host-inv()
 {
@@ -62,6 +63,10 @@ write-osinfo()
 	vendor=$os_vendor
 	name=$os_name
 	arch=$os_arch
+
+	echo " -kv:" >> $filename
+	echo "  key: os.ucsToolVersion" >> $filename
+	echo "  value:" $ucsToolVersion >> $filename
 
 	echo " -kv:" >> $filename
 	echo "  key: os.updateTimestamp" >> $filename
