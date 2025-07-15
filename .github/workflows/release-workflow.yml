@@ -17,7 +17,7 @@ jobs:
               uses: actions/checkout@v2
 
             - name: Replace version in source files
-              run: sed -Ei 's/ucsToolVersion=""$/ucsToolVersion="${{github.ref_name}}"/' gather_inventory_from_host.sh
+              run: sed -Ei 's/@@RPM_VERSION@@$/${{github.run_number}}/' gather_inventory_from_host.sh
 
             - name: Replace version in RPM spec so correct source is downloaded when building RPM
               run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ github.event.repository.name }}.spec
@@ -38,9 +38,6 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v2
-
-            - name: Replace version in source files
-              run: sed -Ei 's/ucsToolVersion=""$/ucsToolVersion="${{github.ref_name}}"/' gather_inventory_from_host.sh
 
             - name: Replace version in RPM spec so correct source is downloaded when building RPM
               run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ github.event.repository.name }}.spec
