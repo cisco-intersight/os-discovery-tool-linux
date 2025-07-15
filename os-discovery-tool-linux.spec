@@ -15,6 +15,9 @@ The Cisco Intersight os-discovery-tool is used to collect operating system and d
 %prep
 %setup -q
 
+# Replace the placeholder in gather_inventory_from_host.sh with the actual RPM Version
+sed -i "s|@@VERSION@@|%{version}|g" gather_inventory_from_host.sh
+
 %build
 
 %install

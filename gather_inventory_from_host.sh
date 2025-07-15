@@ -3,7 +3,7 @@
 
 export PATH=$PATH:/sbin:/usr/sbin
 installationPath="/opt/os-discovery-tool"
-ucsToolVersion=""
+ucsToolVersion="@@VERSION@@"
 
 cleanup_host-inv()
 {
