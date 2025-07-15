@@ -16,11 +16,11 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v2
 
-            - name: Replace version in RPM spec so correct source is downloaded when building RPM
-              run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ github.event.repository.name }}.spec
-
             - name: Replace version in source files
               run: sed -Ei 's/ucsToolVersion=""$/ucsToolVersion="${{github.ref_name}}"/' gather_inventory_from_host.sh
+
+            - name: Replace version in RPM spec so correct source is downloaded when building RPM
+              run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ github.event.repository.name }}.spec
 
             - name: Create source archive
               run: tar -cvf ${{ env.RPMNAME }}-${{ github.ref_name }}.tar.gz *
@@ -39,11 +39,11 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v2
 
-            - name: Replace version in RPM spec so correct source is downloaded when building RPM
-              run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ github.event.repository.name }}.spec
-
             - name: Replace version in source files
               run: sed -Ei 's/ucsToolVersion=""$/ucsToolVersion="${{github.ref_name}}"/' gather_inventory_from_host.sh
+
+            - name: Replace version in RPM spec so correct source is downloaded when building RPM
+              run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ github.event.repository.name }}.spec
 
             - name: Run rpmbuild on RPM spec to produce package
               id: rpm
