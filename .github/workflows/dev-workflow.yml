@@ -4,7 +4,7 @@ on: push
 env:
   DIST: el9
   ARCH: x86_64
-  RPMNAME: os-discovery-tool
+  RPMNAME: ucs-tool
 
 jobs:
     build_tarball:

@@ -3,7 +3,7 @@
 
 export PATH=$PATH:/sbin:/usr/sbin
 ipmitoolcmd=`which ipmitool`
-installationPath="/opt/os-discovery-tool"
+installationPath="/opt/ucs-tool"
 inventoryfilename=$installationPath/"host-inv.yaml"
 
 if [ $(stat -c %s $inventoryfilename) -ge 65535 ] ; then
