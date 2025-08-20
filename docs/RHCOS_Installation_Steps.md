@@ -1,14 +1,3 @@
-##  ucs-tool on Red Hat Enterprise Linux CoreOS (RHCOS)
-ucs-tool docker image: `podman pull intersight/ucs-tool:1.0.0`
-
-### To run ucs-tool directly on worker node:
-1. Make sure you are logged in as `root` user.
-2. Container needs to be executed in "privileged" mode to access host OS details.
-3. Mount /etc/os-release /lib/modules directories into the container
-
-run the container using the command: `podman run --rm --privileged -d -v /etc/os-release:/etc/os-release -v /lib/modules:/lib/modules intersight/ucs-tool:1.0.0`
-
-
 ### To run as DaemonSet on OpenShift:
 
 To run the `ucs-tool` as a DaemonSet on OpenShift, you'll need to create a service account and grant it the necessary permissions to run privileged containers.
@@ -83,3 +72,16 @@ oc apply -f ucs-tool-daemonset.yaml
 ```
 
 This configuration correctly sets up the `ucs-tool` to run on each worker node with the necessary host access.
+
+
+## Troubleshooting Steps:
+
+###  ucs-tool on Red Hat Enterprise Linux CoreOS (RHCOS)
+pull the docker image: `podman pull intersight/ucs-tool:1.0.0`
+
+### To run ucs-tool directly on worker node:
+1. Make sure you are logged in as `root` user.
+2. Container needs to be executed in "privileged" mode to access host OS details.
+3. Mount /etc/os-release /lib/modules directories into the container
+
+run the container using the command: `podman run --rm --privileged -d -v /etc/os-release:/etc/os-release -v /lib/modules:/lib/modules intersight/ucs-tool:1.0.0`
