@@ -2,7 +2,7 @@
 # Copyright (c) 2025 Cisco Systems, Inc. All rights reserved.
 
 export PATH=$PATH:/sbin:/usr/sbin
-installationPath="/opt/os-discovery-tool"
+installationPath="/opt/ucs-tool"
 ucsToolVersion="@@VERSION@@"
 
 cleanup_host-inv()

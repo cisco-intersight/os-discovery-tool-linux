@@ -38,11 +38,11 @@ Confirm all pre-requisite packages are installed
 
 To install on Debain based systems:
 - Download the latest debain package from the releases page
-- Copy the debain package into the system and run the command ```dpkg -i <os-discovery-tool><version>.deb```
+- Copy the debain package into the system and run the command ```dpkg -i <ucs-tool><version>.deb```
 
 To install on RPM based systems:
 - Download the latest rpm package from the releases page
-- Copy the rpm package into the system and run the command ```rpm -i <os-discovery-tool><version>.rpm```
+- Copy the rpm package into the system and run the command ```rpm -i <ucs-tool><version>.rpm```
 
 A cron job to run at boot and preferably every 24 hours.
 
