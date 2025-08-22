@@ -32,6 +32,8 @@ SuSE Linux: `zypper install ipmitool lshw`
 
 Note: `ipmitool` is required, while the other utilities are optional. However, if the optional utilities are not installed, only Operating System information will be collected and sent to intersight.
 
+Red Hat Enterprise Linux CoreOS (RHCOS): [click here](docs/RHCOS_Installation_Steps.md)
+
 ## Usage
 
 Confirm all pre-requisite packages are installed
