@@ -43,7 +43,8 @@ spec:
       hostNetwork: true
       containers:
         - name: ucs-tool-container
-          image: intersight/ucs-tool:1.0.0
+          # Obtain the latest version of the ucs-tool from https://hub.docker.com/r/intersight/ucs-tool.
+          image: intersight/ucs-tool:1.0.1
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: true
@@ -77,11 +78,11 @@ This configuration correctly sets up the `ucs-tool` to run on each worker node w
 ## Troubleshooting Steps:
 
 ###  ucs-tool on Red Hat Enterprise Linux CoreOS (RHCOS)
-pull the docker image: `podman pull intersight/ucs-tool:1.0.0`
+pull the docker image: `podman pull intersight/ucs-tool:1.0.1`
 
 ### To run ucs-tool directly on worker node:
 1. Make sure you are logged in as `root` user.
 2. Container needs to be executed in "privileged" mode to access host OS details.
 3. Mount /etc/os-release /lib/modules directories into the container
 
-run the container using the command: `podman run --rm --privileged -d -v /etc/os-release:/etc/os-release -v /lib/modules:/lib/modules intersight/ucs-tool:1.0.0`
+run the container using the command: `podman run --rm --privileged -d -v /etc/os-release:/etc/os-release -v /lib/modules:/lib/modules intersight/ucs-tool:1.0.1`
