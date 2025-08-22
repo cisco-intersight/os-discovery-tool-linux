@@ -18,6 +18,9 @@ RUN mkdir -p /opt/ucs-tool
 # Copy ODT files
 COPY ./LICENSE ./debian-os-name.sh ./debian-os-version.sh ./fcdev.sh ./fcdriver.sh ./fcversions.sh ./gather_inventory_from_host.sh ./gpudev.sh ./gpudriver.sh ./gpuversions.sh ./host-inv.yaml ./netdev.sh ./netdriver.sh ./netversions.sh ./oracle-os-name.sh ./oracle-os-version.sh ./osvendor-legacy.sh ./osvendor.sh ./redhat-os-name.sh ./rocky-os-name.sh ./send_inventory_to_imc.sh ./storagedev.sh ./storagedriver.sh ./storageversions.sh ./suse-os-version.sh ./coreos-name.sh /opt/ucs-tool/
 
+# Update the release version
+RUN sed -i 's/@@VERSION@@/1.0.1/' /opt/ucs-tool/gather_inventory_from_host.sh
+
 WORKDIR /opt/ucs-tool
 
 # Create cron job configuration
