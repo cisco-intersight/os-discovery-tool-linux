@@ -56,6 +56,10 @@ spec:
             - name: host-lib-modules
               mountPath: /lib/modules
               readOnly: true
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
       volumes:
         - name: host-os-release
           hostPath:
