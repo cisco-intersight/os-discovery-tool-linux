@@ -6,11 +6,13 @@ ipmitoolcmd=`which ipmitool`
 installationPath="/opt/ucs-tool"
 inventoryfilename=$installationPath/"host-inv.yaml"
 netfunction="0x36"
+descriptorpart="1"
 servermodel=`/usr/sbin/dmidecode -s system-product-name`
 if [[ $servermodel == *"CAI-845A"* ]]; then
     netfunction="0x34"
 elif [[ $servermodel == *"UCSC-885A"* ]]; then
     netfunction="0x30"
+    descriptorpart="4"
 fi
 
 echo "[localhost]: Removing existing host-inv.yaml inventory file from IMC"
@@ -19,7 +21,7 @@ $cmd
 
 echo "[localhost]: Getting File Descriptor For host-inv.yaml inventory file from IMC"
 filedescriptor=$(${ipmitoolcmd} raw ${netfunction} 0x77 0x00 0x68 0x6f 0x73 0x74 0x2d 0x69 0x6e 0x76 0x2e 0x79 0x61 0x6d 0x6c)
-filedescriptor="0x${filedescriptor:1}"
+filedescriptor="0x${filedescriptor:$descriptorpart}"
 
 filebytearray=($(od -An -vtx1 $inventoryfilename | tr -d '\n'))
 
