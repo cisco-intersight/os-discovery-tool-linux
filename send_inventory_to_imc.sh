@@ -7,12 +7,10 @@ installationPath="/opt/ucs-tool"
 inventoryfilename=$installationPath/"host-inv.yaml"
 netfunction="0x36"
 servermodel=`/usr/sbin/dmidecode -s system-product-name`
-if [[ $servermodel == "CAI-845A-M8" ]]; then
+if [[ $servermodel == *"CAI-845A"* ]]; then
     netfunction="0x34"
-fi
-
-if [ $(stat -c %s $inventoryfilename) -ge 65535 ] ; then
-	echo Exiting! $file is over maximum size of 65535
+elif [[ $servermodel == *"UCSC-885A"* ]]; then
+    netfunction="0x30"
 fi
 
 echo "[localhost]: Removing existing host-inv.yaml inventory file from IMC"
