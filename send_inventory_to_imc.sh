@@ -10,6 +10,7 @@ descriptorpart="1"
 servermodel=`/usr/sbin/dmidecode -s system-product-name`
 if [[ $servermodel == *"CAI-845A"* ]]; then
     netfunction="0x34"
+    descriptorpart="4"
 elif [[ $servermodel == *"UCSC-885A"* ]]; then
     netfunction="0x30"
     descriptorpart="4"
