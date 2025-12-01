@@ -65,6 +65,10 @@ rm -r -f $TEMP_FILE_NAME
 #To execute immediately after installation
 RUN_CMD=`/opt/ucs-tool/gather_inventory_from_host.sh & > /dev/null 2>&1`
 
+%preun
+# Remove inventory from IMC before uninstalling
+/opt/ucs-tool/send_inventory_to_imc.sh --removeInventory > /dev/null 2>&1
+
 %postun
 TEMP_FILE_NAME=%{tempFile}
 CRON_OUT_FILE=`crontab -l > $TEMP_FILE_NAME`
