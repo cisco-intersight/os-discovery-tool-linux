@@ -102,6 +102,9 @@ write-networkinfo()
 	echo "Getting Network Driver Info"
 
 	drivers=$($installationPath/netdriver.sh)
+	if [[ -z $drivers ]]; then
+	  return
+	fi
 	versions=$($installationPath/netversions.sh)
 	description=$($installationPath/netdev.sh)
 
@@ -137,8 +140,11 @@ write-fcinfo()
 {
 	echo "Getting vHBA Driver Info"
 
-	fc_dev=$($installationPath/fcdev.sh)
 	drivers=$($installationPath/fcdriver.sh)
+	if [[ -z $drivers ]]; then
+	  return
+	fi
+	fc_dev=$($installationPath/fcdev.sh)
 	versions=$($installationPath/fcversions.sh)
 
 	counter=$totaldrivercount
@@ -172,6 +178,9 @@ write-storageinfo()
 	echo "Getting Storage Driver Info"
 
 	drivers=$($installationPath/storagedriver.sh)
+	if [[ -z $drivers ]]; then
+	  return
+	fi
 	versions=$($installationPath/storageversions.sh)
 	description=$($installationPath/storagedev.sh)
 
