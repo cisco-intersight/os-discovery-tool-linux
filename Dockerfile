@@ -27,7 +27,7 @@ LABEL \
     version="1.0.220" \
     release="1" \
     summary="Cisco Intersight API integration for OpenShift" \
-    maintainer="pnithyan <pnithyan@cisco.com>"
+    maintainer="Cisco Intersight Recommendation Engine <intersight-recommendation-engine-dev@cisco.com>"
 
 COPY LICENSE /licenses/LICENSE
 
