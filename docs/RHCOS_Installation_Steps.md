@@ -44,7 +44,7 @@ spec:
       containers:
         - name: ucs-tool-container
           # Obtain the latest version of the ucs-tool from https://hub.docker.com/r/intersight/ucs-tool.
-          image: intersight/ucs-tool:1.0.2
+          image: docker.io/intersight/ucs-tool:1.0.2
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: true
