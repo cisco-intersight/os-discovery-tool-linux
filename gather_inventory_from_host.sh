@@ -52,6 +52,10 @@ write-osinfo()
       os_name=$($installationPath/suse-os-version.sh)
       os_flavor=$($installationPath/suse-os-version.sh)
       os_vendor='SuSE'
+	elif which pveversion > /dev/null 2>&1; then
+	  os_name=$($installationPath/proxmox-os-name.sh)
+	  os_flavor=$($installationPath/proxmox-os-name.sh)
+	  os_vendor='Proxmox'
 	else
 	  echo "Currently Unsupported OS"
 	fi
