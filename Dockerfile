@@ -1,4 +1,4 @@
-FROM redhat/ubi8
+FROM redhat/ubi9
 
 # Register with the entitlement server
 # This example uses placeholders for username and password
