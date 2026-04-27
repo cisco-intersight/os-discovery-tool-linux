@@ -1,5 +1,5 @@
 Name:           ucs-tool
-Version:        1.0.1
+Version:        1.0.5
 Release:        1%{?dist}
 Vendor:         Cisco Systems, Inc.
 Summary:        The Cisco Intersight ucs-tool is used to collect operating system and driver information for Hardware Compliance Validation.
