@@ -6,7 +6,7 @@ RUN subscription-manager register --username <your_username> --password <your_pa
 
 # Update the package list
 RUN yum update -y && \
-    yum install -y kmod lshw pciutils sudo ipmitool cronie && \
+    yum install -y kmod lshw pciutils sudo ipmitool cronie python3.9 python3.9-pip && \
     yum clean all
 
 # Unregister with the entitlement server
@@ -32,7 +32,7 @@ LABEL \
 COPY LICENSE /licenses/LICENSE
 
 # Update the release version
-RUN sed -i 's/@@VERSION@@/1.0.3/' /opt/ucs-tool/gather_inventory_from_host.sh
+RUN sed -i 's/@@VERSION@@/1.0.5/' /opt/ucs-tool/gather_inventory_from_host.sh
 
 WORKDIR /opt/ucs-tool
 

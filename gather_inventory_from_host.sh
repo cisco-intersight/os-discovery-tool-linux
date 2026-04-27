@@ -60,8 +60,6 @@ write-osinfo()
 	  echo "Currently Unsupported OS"
 	fi
 
-	updateTimestamp=$(date -Is)
-
 	releaseVersionString=$kernel_version
 	type=$os_type
 	vendor=$os_vendor
@@ -71,10 +69,6 @@ write-osinfo()
 	echo " -kv:" >> $filename
 	echo "  key: os.ucsToolVersion" >> $filename
 	echo "  value:" $ucsToolVersion >> $filename
-
-	echo " -kv:" >> $filename
-	echo "  key: os.updateTimestamp" >> $filename
-	echo "  value:" $updateTimestamp >> $filename
 
 	echo " -kv:" >> $filename
 	echo "  key: os.kernelVersionString" >> $filename
