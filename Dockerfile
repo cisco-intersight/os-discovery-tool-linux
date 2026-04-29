@@ -6,7 +6,7 @@ RUN subscription-manager register --username <your_username> --password <your_pa
 
 # Update the package list
 RUN yum update -y && \
-    yum install -y kmod lshw pciutils sudo ipmitool cronie python3.9 python3.9-pip && \
+    yum install -y kmod lshw pciutils sudo ipmitool cronie python3.12 python3.12-pip && \
     yum clean all
 
 # Unregister with the entitlement server
