@@ -76,7 +76,6 @@ ADD_TO_CRON=`sed -i '/#Schedule the os inventory to imc:/,+3d' $TEMP_FILE_NAME`
 ADD_TO_CRON=`crontab $TEMP_FILE_NAME`
 rm -r -f $TEMP_FILE_NAME
 
-%license LICENSE
 %files
 %dir /opt/ucs-tool
 %defattr(-,root,root,-)
