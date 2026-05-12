@@ -56,7 +56,7 @@ chmod 755 -R /opt/ucs-tool
 %define tempFile `mktemp`
 #store temp file name
 TEMP_FILE_NAME=%{tempFile}
-CRON_OUT_FILE=`crontab -l > $TEMP_FILE_NAME`
+CRON_OUT_FILE=`crontab -l > $TEMP_FILE_NAME 2>/dev/null`
 ADD_TO_CRON=`echo "#Schedule the os inventory to imc:" >> $TEMP_FILE_NAME`
 ADD_TO_CRON=`echo "0 0 * * * /opt/ucs-tool/gather_inventory_from_host.sh & > /dev/null 2>&1 " >> $TEMP_FILE_NAME`
 ADD_TO_CRON=`echo "@reboot /opt/ucs-tool/gather_inventory_from_host.sh & > /dev/null 2>&1 " >> $TEMP_FILE_NAME`
@@ -71,7 +71,7 @@ RUN_CMD=`/opt/ucs-tool/gather_inventory_from_host.sh & > /dev/null 2>&1`
 
 %postun
 TEMP_FILE_NAME=%{tempFile}
-CRON_OUT_FILE=`crontab -l > $TEMP_FILE_NAME`
+CRON_OUT_FILE=`crontab -l > $TEMP_FILE_NAME 2>/dev/null`
 ADD_TO_CRON=`sed -i '/#Schedule the os inventory to imc:/,+3d' $TEMP_FILE_NAME`
 ADD_TO_CRON=`crontab $TEMP_FILE_NAME`
 rm -r -f $TEMP_FILE_NAME
