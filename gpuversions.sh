@@ -22,6 +22,12 @@ for pciaddress in $(${lshwcmd} -C Display 2>/dev/null | grep "pci@" | awk -F":" 
          classcode=$(${lspcicmd} -v -s ${pciaddress} | grep -i "VGA compatible controller\|3d controller" | awk -F":" '{print $2}' | awk -F" " '{print $2" "$3" "$4}' | xargs)
          driver=$(${lspcicmd} -v -s ${pciaddress} | grep "Kernel driver" | awk -F":" '{print $2}' | xargs);
 
+            # check if GPU is in passthru mode
+            if [[ "$driver" == "vfio-pci" ]]; then
+                echo ""
+                continue
+            fi
+
          # Check if the nvidia-smi drivers are installed correctly
          if ! ([[ $nvidiasmicmd =~ $invalid || -z "$nvidiasmicmd" ]]);
          then
@@ -67,11 +73,7 @@ for pciaddress in $(${lshwcmd} -C Display 2>/dev/null | grep "pci@" | awk -F":" 
               fi
           fi
 
-         # check if GPU is in passthru mode
-         elif [[ ($osvendor == "rhel") || ($osvendor == "red hat") ]] && [[ ($driver == "vfio-pci") ]];
-         then
-            continue
-         fi
+            fi
     elif [[ ${displaydevice,,} =~ 'amd' ]]; then
         if [ -e $amdcmdpath ]; then
 	    cat $amdcmdpath
