@@ -5,7 +5,7 @@ Vendor:         Cisco Systems, Inc.
 Summary:        The Cisco Intersight ucs-tool is used to collect operating system and driver information for Hardware Compliance Validation.
 License:        Apache-2.0
 Source0:        %{name}-%{version}.tar.gz
-Requires:       /bin/bash, ipmitool
+Requires:       ipmitool
 
 %description
 The Cisco Intersight ucs-tool is used to collect operating system and driver information for Hardware Compliance Validation.
