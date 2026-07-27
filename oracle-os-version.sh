@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Copyright (c) 2025 Cisco Systems, Inc. All rights reserved.
 
 kernel=$(uname -a | awk '{print $3}' | awk -F"." '{print $(NF-1)}')
