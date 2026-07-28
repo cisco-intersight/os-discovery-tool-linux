@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Copyright (c) 2025 Cisco Systems, Inc. All rights reserved.
 
 redhat_version=$(cat /etc/*-release | grep ^VERSION | head -n1 | awk -F"=" '{print $2}' | xargs | awk -F'[ ]' '{print $1}' | xargs)
