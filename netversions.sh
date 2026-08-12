@@ -26,12 +26,19 @@ done
 # support for QLogic and Emulex HBA Adapter
 ${lspcicmd} -nn | grep -Ei 'hba|host bus adapter|fibre channel' | awk -F" " '{print $1}' | while read pciaddress;
 do
-    hbaversionstring=`${lspcicmd} -v -s ${pciaddress} | grep "Kernel driver" | awk -F":" '{print $2}' | xargs ${modinfocmd} 2>/dev/null | grep ^version: | awk '{print $2}'`
-    if [ -z "${hbaversionstring}" ]
-    then
-        echo `${lspcicmd} -v -s ${pciaddress} | grep "Kernel driver" | awk -F":" '{print $2}'| \
-    xargs ${modinfocmd} 2>/dev/null | grep ^vermagic: | awk '{print $2}'`
+    hbaoutput=$("$lspcicmd" -v -s "$pciaddress")
+    hba_kernel_driver=$(echo "$hbaoutput" | grep "Kernel driver" | awk '{print $NF}')
+    hba_kernel_modules=$(echo "$hbaoutput" | grep "Kernel modules" | awk '{print $NF}')
+    if [ -n "$hba_kernel_driver" ]; then
+        hba_kernel_info=$hba_kernel_driver
     else
-        echo ${hbaversionstring}
+        hba_kernel_info=$hba_kernel_modules
+    fi
+    hbaversionstring=$(${modinfocmd} $hba_kernel_info 2>/dev/null | grep ^version: | head -n1 | awk '{print $2}' | xargs)
+    hbavermagic=$(${modinfocmd} $hba_kernel_info 2>/dev/null | grep ^vermagic: | awk '{print $2}' | xargs)
+    if [ -n "${hbaversionstring}" ]; then
+        echo $hbaversionstring
+    else
+        echo $hbavermagic
     fi
 done
