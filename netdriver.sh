@@ -18,5 +18,12 @@ done
 # support for QLogic and Emulex HBA Adapter
 ${lspcicmd} -nn | grep -Ei 'hba|host bus adapter|fibre channel' | awk -F" " '{print $1}' | while read pciaddress;
 do
-    ${lspcicmd} -v -s ${pciaddress} | grep "Kernel driver" | awk -F":" '{print $2}'| xargs;
+    hbaoutput=$("$lspcicmd" -v -s "$pciaddress")
+    hba_kernel_driver=$(echo "$hbaoutput" | grep "Kernel driver" | awk '{print $NF}')
+    hba_kernel_modules=$(echo "$hbaoutput" | grep "Kernel modules" | awk '{print $NF}')
+    if [ -n "$hba_kernel_driver" ]; then
+        echo $hba_kernel_driver
+    else
+        echo $hba_kernel_modules
+    fi
 done
