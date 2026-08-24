@@ -5,9 +5,17 @@ FROM redhat/ubi9
 RUN subscription-manager register --username <your_username> --password <your_password>
 
 # Update the package list
-RUN yum update -y && \
-    yum install -y kmod lshw pciutils sudo ipmitool cronie python3.12 python3.12-pip && \
-    yum clean all
+RUN dnf update -y && \
+    dnf install -y --nodocs kmod lshw pciutils sudo ipmitool cronie \
+    python3.12 python3.12-pip python3.12-setuptools && \
+    dnf clean all
+
+# Upgrade core tooling & install importlib-metadata inside Python 3.12 site-packages
+RUN python3.12 -m pip install --no-cache-dir --upgrade \
+    pip \
+    setuptools \
+    importlib-metadata \
+    importlib-resources
 
 # Unregister with the entitlement server
 RUN subscription-manager unregister
@@ -32,7 +40,7 @@ LABEL \
 COPY LICENSE /licenses/LICENSE
 
 # Update the release version
-RUN sed -i 's/@@VERSION@@/1.0.5/' /opt/ucs-tool/gather_inventory_from_host.sh
+RUN sed -i 's/@@VERSION@@/1.0.6/' /opt/ucs-tool/gather_inventory_from_host.sh
 
 WORKDIR /opt/ucs-tool
 
