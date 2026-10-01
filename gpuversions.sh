@@ -80,3 +80,22 @@ for pciaddress in $(${lshwcmd} -C Display 2>/dev/null | grep "pci@" | awk -F":" 
         fi
     fi
 done
+
+# lshw -C Display misses PCI processing accelerators. Match the same
+# class 1200 devices as gpudev.sh and gpudriver.sh, then report their version.
+amdgpuversion=$(${modinfocmd} -F version amdgpu 2>/dev/null)
+${lspcicmd} -nnk | awk -v version="${amdgpuversion}" '
+    function report_version() {
+        if (is_accelerator && has_amdgpu)
+            print version
+    }
+    /^[^[:space:]]/ {
+        report_version()
+        is_accelerator = /Processing accelerators \[1200\]:/
+        has_amdgpu = 0
+    }
+    /^[[:space:]]+Kernel (driver in use|modules):/ && /(^|[,[:space:]])amdgpu([,[:space:]]|$)/ {
+        has_amdgpu = 1
+    }
+    END { report_version() }
+'
