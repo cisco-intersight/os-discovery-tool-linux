@@ -80,3 +80,21 @@ for pciaddress in $(${lshwcmd} -C Display 2>/dev/null | grep "pci@" | awk -F":" 
         fi
     fi
 done
+
+# lshw -C Display misses PCI processing accelerators. Match gpudev.sh's
+# class 1200 scan and accept either a bound amdgpu driver or a listed module.
+${lspcicmd} -nnk | awk '
+    function report_driver() {
+        if (is_accelerator && has_amdgpu)
+            print "amdgpu"
+    }
+    /^[^[:space:]]/ {
+        report_driver()
+        is_accelerator = /Processing accelerators \[1200\]:/
+        has_amdgpu = 0
+    }
+    /^[[:space:]]+Kernel (driver in use|modules):/ && /(^|[,[:space:]])amdgpu([,[:space:]]|$)/ {
+        has_amdgpu = 1
+    }
+    END { report_driver() }
+'
