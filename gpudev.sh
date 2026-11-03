@@ -7,8 +7,41 @@ lspcicmd=`which lspci`
 gpuvendornvidia='nvidia'
 gpuvendoramd='amd'
 nvidiasmicmd=`which nvidia-smi 2>&1`
+amdsmicmd=`which amd-smi 2>&1`
 amdcmdpath="/opt/rocm/.info/version"
 invalid=" |'"
+
+check_rocm_driver_device() {
+    rocmversion=$($amdsmicmd version 2>/dev/null | grep -i "ROCm version")
+    if [[ -n "$rocmversion" ]]; then
+        echo "AMD ROCm Driver"
+    fi
+}
+
+# lshw -C Display misses PCI processing accelerators, so scan lspci as well:
+# 1. Find each class 1200 processing accelerator, regardless of vendor ID.
+# 2. Check whether amdgpu is the driver in use or is listed under Kernel modules.
+# 3. Print the device description if either amdgpu line is present.
+# A listed module does not necessarily mean amdgpu is the active driver.
+check_amdgpu_accelerators_device() {
+    ${lspcicmd} -nnk | awk '
+        function report_device() {
+            if (is_accelerator && has_amdgpu)
+                print device_name
+        }
+        /^[^[:space:]]/ {
+            report_device()
+            is_accelerator = /Processing accelerators \[1200\]:/
+            device_name = $0
+            sub(/^[^[:space:]]+[[:space:]]+Processing accelerators \[1200\]:[[:space:]]*/, "", device_name)
+            has_amdgpu = 0
+        }
+        /^[[:space:]]+Kernel (driver in use|modules):/ && /(^|[,[:space:]])amdgpu([,[:space:]]|$)/ {
+            has_amdgpu = 1
+        }
+        END { report_device() }
+    '
+}
 
 for pciaddress in $(${lshwcmd} -C Display 2>/dev/null | grep "pci@" | awk -F":" '{print $3":"$4}');
 do
@@ -26,25 +59,6 @@ do
     fi
 done
 
-# lshw -C Display misses PCI processing accelerators, so scan lspci as well:
-# 1. Find each class 1200 processing accelerator, regardless of vendor ID.
-# 2. Check whether amdgpu is the driver in use or is listed under Kernel modules.
-# 3. Print the device description if either amdgpu line is present.
-# A listed module does not necessarily mean amdgpu is the active driver.
-${lspcicmd} -nnk | awk '
-    function report_device() {
-        if (is_accelerator && has_amdgpu)
-            print device_name
-    }
-    /^[^[:space:]]/ {
-        report_device()
-        is_accelerator = /Processing accelerators \[1200\]:/
-        device_name = $0
-        sub(/^[^[:space:]]+[[:space:]]+Processing accelerators \[1200\]:[[:space:]]*/, "", device_name)
-        has_amdgpu = 0
-    }
-    /^[[:space:]]+Kernel (driver in use|modules):/ && /(^|[,[:space:]])amdgpu([,[:space:]]|$)/ {
-        has_amdgpu = 1
-    }
-    END { report_device() }
-'
+check_rocm_driver_device
+
+check_amdgpu_accelerators_device
