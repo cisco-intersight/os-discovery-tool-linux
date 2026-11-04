@@ -7,11 +7,41 @@ lspcicmd=`which lspci`
 modinfocmd=`which modinfo`
 osvendor=$(cat /etc/*-release 2>/dev/null | grep -i ^ID= | head -n1 | awk -F"=" '{print $2}'| xargs)
 nvidiasmicmd=`which nvidia-smi 2>&1`
+amdsmicmd=`which amd-smi 2>&1`
 amdcmdpath="/opt/rocm/.info/version"
 invalid=" |'"
 
 # List of OS vendors who support nvidia drivers
 declare -a osvendorlist=("ubuntu" "centos" "rhel" "red hat")
+
+check_rocm_driver() {
+    if ! ([[ $amdsmicmd =~ $invalid || -z "$amdsmicmd" ]]); then
+        rocmversion=$($amdsmicmd version 2>/dev/null | grep -i "ROCm version")
+        if [[ -n "$rocmversion" ]]; then
+            echo "rocm"
+        fi
+    fi
+}
+
+# lshw -C Display misses PCI processing accelerators. Match gpudev.sh's
+# class 1200 scan and accept either a bound amdgpu driver or a listed module.
+check_amdgpu_accelerators() {
+    ${lspcicmd} -nnk | awk '
+        function report_driver() {
+            if (is_accelerator && has_amdgpu)
+                print "amdgpu"
+        }
+        /^[^[:space:]]/ {
+            report_driver()
+            is_accelerator = /Processing accelerators \[1200\]:/
+            has_amdgpu = 0
+        }
+        /^[[:space:]]+Kernel (driver in use|modules):/ && /(^|[,[:space:]])amdgpu([,[:space:]]|$)/ {
+            has_amdgpu = 1
+        }
+        END { report_driver() }
+    '
+}
 
 for pciaddress in $(${lshwcmd} -C Display 2>/dev/null | grep "pci@" | awk -F":" '{print $3":"$4}');
   do
@@ -81,20 +111,7 @@ for pciaddress in $(${lshwcmd} -C Display 2>/dev/null | grep "pci@" | awk -F":" 
     fi
 done
 
-# lshw -C Display misses PCI processing accelerators. Match gpudev.sh's
-# class 1200 scan and accept either a bound amdgpu driver or a listed module.
-${lspcicmd} -nnk | awk '
-    function report_driver() {
-        if (is_accelerator && has_amdgpu)
-            print "amdgpu"
-    }
-    /^[^[:space:]]/ {
-        report_driver()
-        is_accelerator = /Processing accelerators \[1200\]:/
-        has_amdgpu = 0
-    }
-    /^[[:space:]]+Kernel (driver in use|modules):/ && /(^|[,[:space:]])amdgpu([,[:space:]]|$)/ {
-        has_amdgpu = 1
-    }
-    END { report_driver() }
-'
+check_rocm_driver
+
+check_amdgpu_accelerators
+

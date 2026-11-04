@@ -7,11 +7,40 @@ lspcicmd=`which lspci`
 modinfocmd=`which modinfo`
 osvendor=$(cat /etc/*-release 2>/dev/null | grep -i ^ID= | head -n1 | awk -F"=" '{print $2}'| xargs)
 nvidiasmicmd=`which nvidia-smi 2>&1`
+amdsmicmd=`which amd-smi 2>&1`
 amdcmdpath="/opt/rocm/.info/version"
 invalid=" |'"
 
 # List of OS vendors who support nvidia drivers
 declare -a osvendorlist=("ubuntu" "centos" "rhel" "red hat")
+
+check_rocm_driver_version() {
+    rocmversion=$($amdsmicmd version 2>/dev/null | grep -i "ROCm version" | awk -F"ROCm version: " '{print $2}' | awk -F" " '{print $1}' | xargs)
+    if [[ -n "$rocmversion" ]]; then
+        echo "$rocmversion"
+    fi
+}
+
+# lshw -C Display misses PCI processing accelerators. Match the same
+# class 1200 devices as gpudev.sh and gpudriver.sh, then report their version.
+check_amdgpu_accelerators_version() {
+    local amdgpuversion=$(${modinfocmd} -F version amdgpu 2>/dev/null)
+    ${lspcicmd} -nnk | awk -v version="${amdgpuversion}" '
+        function report_version() {
+            if (is_accelerator && has_amdgpu)
+                print version
+        }
+        /^[^[:space:]]/ {
+            report_version()
+            is_accelerator = /Processing accelerators \[1200\]:/
+            has_amdgpu = 0
+        }
+        /^[[:space:]]+Kernel (driver in use|modules):/ && /(^|[,[:space:]])amdgpu([,[:space:]]|$)/ {
+            has_amdgpu = 1
+        }
+        END { report_version() }
+    '
+}
 
 for pciaddress in $(${lshwcmd} -C Display 2>/dev/null | grep "pci@" | awk -F":" '{print $3":"$4}');
   do
@@ -81,21 +110,6 @@ for pciaddress in $(${lshwcmd} -C Display 2>/dev/null | grep "pci@" | awk -F":" 
     fi
 done
 
-# lshw -C Display misses PCI processing accelerators. Match the same
-# class 1200 devices as gpudev.sh and gpudriver.sh, then report their version.
-amdgpuversion=$(${modinfocmd} -F version amdgpu 2>/dev/null)
-${lspcicmd} -nnk | awk -v version="${amdgpuversion}" '
-    function report_version() {
-        if (is_accelerator && has_amdgpu)
-            print version
-    }
-    /^[^[:space:]]/ {
-        report_version()
-        is_accelerator = /Processing accelerators \[1200\]:/
-        has_amdgpu = 0
-    }
-    /^[[:space:]]+Kernel (driver in use|modules):/ && /(^|[,[:space:]])amdgpu([,[:space:]]|$)/ {
-        has_amdgpu = 1
-    }
-    END { report_version() }
-'
+check_rocm_driver_version
+
+check_amdgpu_accelerators_version
